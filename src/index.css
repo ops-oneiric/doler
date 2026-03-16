@@ -14,10 +14,10 @@
   --border-hover: #d1d5db;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --sidebar-bg: rgb(1, 0, 53);
-  --sidebar-text: rgba(255, 255, 255, 0.7);
+  --sidebar-bg: rgb(208, 39, 29);
+  --sidebar-text: rgba(255, 255, 255, 0.8);
   --sidebar-active: #ffffff;
-  --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.15);
   --success: #059669;
   --warning: #d97706;
   --danger: #dc2626;
@@ -30,7 +30,7 @@
 [data-theme='dark'] {
   --primary: rgb(232, 80, 72);
   --primary-hover: rgb(255, 100, 92);
-  --secondary: rgb(140, 140, 200);
+  --secondary: rgb(180, 180, 220);
   --bg: #0f1117;
   --bg-alt: #1a1b26;
   --bg-card: #1e1f2e;
@@ -40,10 +40,10 @@
   --border-hover: #3e4058;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --sidebar-bg: #0a0b14;
-  --sidebar-text: rgba(255, 255, 255, 0.6);
+  --sidebar-bg: rgb(180, 30, 22);
+  --sidebar-text: rgba(255, 255, 255, 0.75);
   --sidebar-active: #ffffff;
-  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.12);
   --input-bg: #1a1b26;
   --input-border: #3e4058;
   --overlay: rgba(0, 0, 0, 0.6);
@@ -1021,6 +1021,12 @@ body {
   background: rgba(37, 99, 235, 0.1);
   color: var(--info);
   border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.alert--danger {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 /* ── Utility ───────────────────────────────────────────────────────────── */
