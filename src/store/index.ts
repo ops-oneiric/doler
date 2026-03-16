@@ -221,10 +221,10 @@ export function exportDatabase(): DatabaseExport {
   };
 }
 
-export function importDatabase(data: DatabaseExport): void {
-  save(KEYS.associates, data.associates ?? []);
-  save(KEYS.clients, data.clients ?? []);
-  save(KEYS.prospects, data.prospects ?? []);
+export function importDatabase(data: Partial<DatabaseExport>): void {
+  if (data.associates) save(KEYS.associates, data.associates);
+  if (data.clients) save(KEYS.clients, data.clients);
+  if (data.prospects) save(KEYS.prospects, data.prospects);
   if (data.engineWeights) save(KEYS.engineWeights, data.engineWeights);
   if (data.settings) save(KEYS.settings, data.settings);
   notify();
