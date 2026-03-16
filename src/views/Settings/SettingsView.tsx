@@ -75,11 +75,15 @@ export function SettingsView() {
     const clampedProspects = Math.min(100, Math.max(0, tsProspects));
 
     const associates = clampedAssociates > 0 ? generateAssociates(clampedAssociates) : [];
+
+    // Use the generated associates (plus existing DB ones) so that client
+    // consultant references remain valid after import.
+    const associatePool = [...associates, ...existingAssociates];
     const { clients, prospects } = clampedClients > 0 || clampedProspects > 0
-      ? generateClientsAndProspects(clampedClients, clampedProspects, existingAssociates)
+      ? generateClientsAndProspects(clampedClients, clampedProspects, associatePool)
       : { clients: [], prospects: [] };
 
-    const data = { associates, clients, prospects };
+    const data = { associates: [...existingAssociates, ...associates], clients, prospects };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
