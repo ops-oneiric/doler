@@ -44,9 +44,9 @@ export function SettingsView() {
       reader.onload = (evt) => {
         try {
           const data = JSON.parse(evt.target?.result as string);
-          importDatabase(data);
-          setImportMsg(`Imported successfully.`);
-          setTimeout(() => setImportMsg(null), 3000);
+          const added = importDatabase(data);
+          setImportMsg(`Added ${added.associates} associates, ${added.clients} clients, ${added.prospects} prospects. Duplicates skipped.`);
+          setTimeout(() => setImportMsg(null), 5000);
         } catch {
           setImportMsg('Failed to parse JSON.');
           setTimeout(() => setImportMsg(null), 3000);

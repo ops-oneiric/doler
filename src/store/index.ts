@@ -221,13 +221,37 @@ export function exportDatabase(): DatabaseExport {
   };
 }
 
-export function importDatabase(data: Partial<DatabaseExport>): void {
-  if (data.associates) save(KEYS.associates, data.associates);
-  if (data.clients) save(KEYS.clients, data.clients);
-  if (data.prospects) save(KEYS.prospects, data.prospects);
+export function importDatabase(data: Partial<DatabaseExport>): { associates: number; clients: number; prospects: number } {
+  let added = { associates: 0, clients: 0, prospects: 0 };
+
+  if (data.associates?.length) {
+    const existing = getAssociates();
+    const existingTokens = new Set(existing.map((a) => a.token));
+    const newItems = data.associates.filter((a) => !existingTokens.has(a.token));
+    save(KEYS.associates, [...existing, ...newItems]);
+    added.associates = newItems.length;
+  }
+
+  if (data.clients?.length) {
+    const existing = getClients();
+    const existingTokens = new Set(existing.map((c) => c.token));
+    const newItems = data.clients.filter((c) => !existingTokens.has(c.token));
+    save(KEYS.clients, [...existing, ...newItems]);
+    added.clients = newItems.length;
+  }
+
+  if (data.prospects?.length) {
+    const existing = getProspects();
+    const existingTokens = new Set(existing.map((p) => p.token));
+    const newItems = data.prospects.filter((p) => !existingTokens.has(p.token));
+    save(KEYS.prospects, [...existing, ...newItems]);
+    added.prospects = newItems.length;
+  }
+
   if (data.engineWeights) save(KEYS.engineWeights, data.engineWeights);
   if (data.settings) save(KEYS.settings, data.settings);
   notify();
+  return added;
 }
 
 export function deleteAllData(): void {
