@@ -17,8 +17,8 @@ import type { Client, Recommendation } from '../../types';
  * thin (each assigned to many clients on average).
  */
 function detectHybridFit(client: Client): { isHybrid: boolean; reason: string } {
-  const SMALL_EMPLOYEE_THRESHOLD = 100;
-  const IPC_CLIENT_LOAD_THRESHOLD = 4;
+  const SMALL_EMPLOYEE_THRESHOLD = 30;
+  const IPC_CLIENT_LOAD_THRESHOLD = 8;
 
   if (client.employeeCount > SMALL_EMPLOYEE_THRESHOLD) {
     return { isHybrid: false, reason: '' };
