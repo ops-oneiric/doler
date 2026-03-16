@@ -13,7 +13,7 @@ const REGIONS: Region[] = ['Central', 'Northeast', 'South', 'West'];
 const STATUSES: ClientStatus[] = ['Active', 'Terminated', 'No Start'];
 const PHASES: ImplementationPhase[] = ['Startup', 'Setup', 'Post Payroll', 'Transitioned'];
 const ANCILLARY_OPTIONS: Ancillary[] = ['TLM', 'ETS', 'GLI', 'WOTC', 'MEP', 'RS', 'LMS', 'API'];
-const PIE_COLORS = ['#D0271D', '#01003D', '#4A90D9', '#50C878'];
+const PIE_COLORS = ['#D0271D', '#4A90D9', '#50C878', '#F59E0B'];
 
 const emptyClient = (): Omit<Client, 'token'> => ({
   clientId: '',
