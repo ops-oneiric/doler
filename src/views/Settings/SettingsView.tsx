@@ -28,7 +28,7 @@ export function SettingsView() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `doler-export-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `adp-assign-export-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -88,7 +88,7 @@ export function SettingsView() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `doler-training-set-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `adp-assign-training-set-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     setShowTraining(false);
