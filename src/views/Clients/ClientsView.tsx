@@ -48,6 +48,10 @@ export function ClientsView() {
   const [form, setForm] = useState(emptyClient());
   const [fromProspect, setFromProspect] = useState(false);
 
+  // Edit modal state
+  const [editClient, setEditClient] = useState<Client | null>(null);
+  const [editForm, setEditForm] = useState(emptyClient());
+
   // Pie chart data
   const regionCounts = REGIONS.map((r) => ({
     name: r,
@@ -86,6 +90,40 @@ export function ClientsView() {
     } else {
       store.updateClient(token, { status });
     }
+  };
+
+  const openEdit = (client: Client) => {
+    setEditClient(client);
+    setEditForm({
+      clientId: client.clientId,
+      prospectToken: client.prospectToken,
+      legalName: client.legalName,
+      status: client.status,
+      implementationPhase: client.implementationPhase,
+      transitionedToPayroll: client.transitionedToPayroll,
+      employeeCount: client.employeeCount,
+      controlCount: client.controlCount,
+      hqState: client.hqState,
+      region: client.region,
+      stateCount: client.stateCount,
+      ancillaries: client.ancillaries,
+      carvesOutBenefits: client.carvesOutBenefits,
+      primaryConsultant: client.primaryConsultant,
+      secondaryConsultant: client.secondaryConsultant,
+      nps: client.nps,
+      startDate: client.startDate,
+      firstInputDate: client.firstInputDate,
+      benefitsDate: client.benefitsDate,
+      assignmentDate: client.assignmentDate,
+      transitionDate: client.transitionDate,
+      terminationDate: client.terminationDate,
+    });
+  };
+
+  const handleEditSave = () => {
+    if (!editClient) return;
+    store.updateClient(editClient.token, editForm);
+    setEditClient(null);
   };
 
   // Prospect options for creating from prospect
@@ -144,6 +182,7 @@ export function ClientsView() {
         columns={columns}
         data={activeImpl}
         keyField="token"
+        onRowClick={openEdit}
         actions={(row) => (
           <div className="inline-actions">
             <select
@@ -164,6 +203,109 @@ export function ClientsView() {
         )}
       />
 
+      {/* Edit Client Modal */}
+      <Modal open={!!editClient} onClose={() => setEditClient(null)} title={`Edit: ${editClient?.legalName ?? ''}`} wide>
+        <div className="form-stack">
+          <div className="form-row">
+            <div className="form-group">
+              <label>Client ID</label>
+              <input value={editForm.clientId} onChange={(e) => setEditForm({ ...editForm, clientId: e.target.value })} />
+            </div>
+            <div className="form-group">
+              <label>Legal Name</label>
+              <input value={editForm.legalName} onChange={(e) => setEditForm({ ...editForm, legalName: e.target.value })} />
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Status</label>
+              <select value={editForm.status} onChange={(e) => setEditForm({ ...editForm, status: e.target.value as ClientStatus })}>
+                {STATUSES.map((s) => <option key={s}>{s}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Phase</label>
+              <select value={editForm.implementationPhase} onChange={(e) => setEditForm({ ...editForm, implementationPhase: e.target.value as ImplementationPhase })}>
+                {PHASES.map((p) => <option key={p}>{p}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Employee Count</label>
+              <input type="number" min={0} value={editForm.employeeCount} onChange={(e) => setEditForm({ ...editForm, employeeCount: +e.target.value })} />
+            </div>
+            <div className="form-group">
+              <label>Control Count</label>
+              <input type="number" min={1} value={editForm.controlCount} onChange={(e) => setEditForm({ ...editForm, controlCount: +e.target.value })} />
+            </div>
+            <div className="form-group">
+              <label>State Count</label>
+              <input type="number" min={1} value={editForm.stateCount} onChange={(e) => setEditForm({ ...editForm, stateCount: +e.target.value })} />
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label>HQ State</label>
+              <input value={editForm.hqState} onChange={(e) => setEditForm({ ...editForm, hqState: e.target.value.toUpperCase().slice(0, 2) })} maxLength={2} />
+            </div>
+            <div className="form-group">
+              <label>Region</label>
+              <select value={editForm.region} onChange={(e) => setEditForm({ ...editForm, region: e.target.value as Region })}>
+                {REGIONS.map((r) => <option key={r}>{r}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>NPS</label>
+              <input type="number" min={0} max={10} value={editForm.nps ?? ''} onChange={(e) => setEditForm({ ...editForm, nps: e.target.value ? +e.target.value : null })} />
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Start Date</label>
+              <input type="date" value={editForm.startDate} onChange={(e) => setEditForm({ ...editForm, startDate: e.target.value })} />
+            </div>
+            <div className="form-group">
+              <label>First Input Date</label>
+              <input type="date" value={editForm.firstInputDate} onChange={(e) => setEditForm({ ...editForm, firstInputDate: e.target.value })} />
+            </div>
+            <div className="form-group">
+              <label>Benefits Date</label>
+              <input type="date" value={editForm.benefitsDate} onChange={(e) => setEditForm({ ...editForm, benefitsDate: e.target.value })} />
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Ancillaries</label>
+            <div className="checkbox-group">
+              {ANCILLARY_OPTIONS.map((a) => (
+                <label key={a} className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={editForm.ancillaries?.includes(a) ?? false}
+                    onChange={(e) => {
+                      const current = editForm.ancillaries ?? [];
+                      const next = e.target.checked
+                        ? [...current, a]
+                        : current.filter((x) => x !== a);
+                      setEditForm({ ...editForm, ancillaries: next.length > 0 ? next : null });
+                    }}
+                  />
+                  {a}
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className="form-group">
+            <label>
+              <input type="checkbox" checked={editForm.carvesOutBenefits} onChange={(e) => setEditForm({ ...editForm, carvesOutBenefits: e.target.checked })} />
+              {' '}Carves Out Benefits
+            </label>
+          </div>
+          <button className="btn btn--primary" onClick={handleEditSave}>Save Changes</button>
+        </div>
+      </Modal>
+
+      {/* New Client Modal */}
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="New Client" wide>
         <div className="form-stack">
           <div className="form-group">
